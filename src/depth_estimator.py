@@ -20,20 +20,19 @@ class DepthEstimator:
 
         if model_name == "midas_small":
             self.model = torch.hub.load(
-                "intel-isl/MiDaS", "MiDaS_small", pretrained=True
+                "intel-isl/MiDaS", "MiDaS_small", pretrained=True, trust_repo=True
             )
-            transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
+            transforms = torch.hub.load("intel-isl/MiDaS", "transforms", trust_repo=True)
             self.transform = transforms.small_transform
 
         elif model_name == "midas_large":
             self.model = torch.hub.load(
-                "intel-isl/MiDaS", "DPT_Large", pretrained=True
+                "intel-isl/MiDaS", "DPT_Large", pretrained=True, trust_repo=True
             )
-            transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
+            transforms = torch.hub.load("intel-isl/MiDaS", "transforms", trust_repo=True)
             self.transform = transforms.dpt_transform
 
         elif model_name == "depth_anything":
-            # Depth Anything V2 loaded via HuggingFace transformers
             from transformers import pipeline
             self.pipe = pipeline(
                 task="depth-estimation",
@@ -79,14 +78,11 @@ class DepthEstimator:
         return self._normalize(depth)
 
     def _predict_depth_anything(self, frame_bgr: np.ndarray) -> np.ndarray:
-        # Depth Anything expects PIL Image in RGB
         from PIL import Image
         frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(frame_rgb)
 
         result = self.pipe(pil_image)
-
-        # Result is a PIL image — convert to numpy
         depth = np.array(result["depth"], dtype=np.float32)
         return self._normalize(depth)
 
