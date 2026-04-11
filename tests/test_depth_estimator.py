@@ -103,4 +103,4 @@ def test_colorize_output_dtype():
 
 def test_colorize_different_colormaps():
     """colorize works with different valid OpenCV colormaps."""
-    from src.depth_estimator import DepthEst
+    from src.depth_estimator import DepthEstimator
