@@ -1,0 +1,25 @@
+model:
+  name: midas_small
+  device: cuda
+
+input:
+  image_path: data/test_image.jpg
+  video_path: data/test_video.mp4
+
+output:
+  image_out: outputs/depth_image.jpg
+  video_out: outputs/depth_video.mp4
+  overlay_out: outputs/overlay_video.mp4
+  colormap: COLORMAP_INFERNO
+
+video:
+  resize_width: 1280
+  resize_height: 720
+
+detector:
+  weights: yolov8n.pt
+  confidence: 0.3
+
+profiler:
+  enabled: true
+  log_path: outputs/profiler_log.csv
