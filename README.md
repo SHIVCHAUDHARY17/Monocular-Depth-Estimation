@@ -201,7 +201,7 @@ The five-backend benchmark runs every backend through the same 100 frames with i
 preprocessing, postprocessing, and timing methodology (`torch.cuda.synchronize()` for honest
 GPU measurement). Same model, same hardware, same input — only the inference backend differs.
 
-[DIAGRAM 2 — FULL PIPELINE BAR CHART]
+<div align="center">  ![Full pipeline benchmark](docs/benchmark_full_pipeline.png)  *Five-backend comparison on GTX 1650 — left: latency (avg and p95 tail); right: throughput with speedup vs PyTorch. INT8 wins outright; FP16 unexpectedly appears slower than FP32. The next section explains why.*  </div>
 
 **Full pipeline timing** (preprocessing + GPU inference + postprocessing):
 
@@ -234,7 +234,7 @@ To measure pure GPU inference, I wrote a separate diagnostic script that:
 3. Uses `torch.cuda.Event` instead of `time.perf_counter` — CUDA Events are timestamps on
    the GPU's own clock, immune to CPU scheduling jitter and OS timer resolution
 
-[DIAGRAM 3 — TIME BREAKDOWN STACKED BAR]
+<div align="center">  ![GPU vs CPU time breakdown](docs/benchmark_gpu_breakdown.png)  *The actual GPU inference (colored segment, measured via CUDA Events) is 3–6 ms across all TensorRT precisions. The 94–97% above is CPU preprocessing, CPU↔GPU transfers, and CPU postprocessing. The 13 ms "FP16 penalty" in the previous chart was CPU jitter swamping the genuine 2 ms GPU advantage — at the GPU level the ordering is exactly INT8 → FP16 → FP32, as theory predicts.*  </div>
 
 **GPU-only timing** (CUDA Events, identical input, identical engines):
 
